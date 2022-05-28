@@ -52,3 +52,5 @@ export type FacebookUser = {
   locale: string
   timezone: number
 }
+
+export type productSchemaType = {}
