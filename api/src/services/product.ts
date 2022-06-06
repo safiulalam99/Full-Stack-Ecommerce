@@ -19,6 +19,10 @@ const findAll = async (): Promise<ProductDocument[]> => {
   return Product.find().sort({ name: 1, price: -1 })
 }
 
+const findOne = async (_id: string): Promise<ProductDocument | null> => {
+  return Product.findById({ _id })
+}
+
 const update = async (
   productId: string,
   update: Partial<ProductDocument>
@@ -52,4 +56,5 @@ export default {
   findAll,
   update,
   deleteProduct,
+  findOne,
 }

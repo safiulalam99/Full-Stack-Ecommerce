@@ -5,8 +5,12 @@ export type UserDocument = Document & {
   email: string
   password: string
   isAdmin: boolean
+  role: Role
 }
-
+enum Role {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
 const userSchema = new Mongoose.Schema(
   {
     username: {
@@ -19,13 +23,15 @@ const userSchema = new Mongoose.Schema(
       required: true,
       unique: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
+
     isAdmin: {
       type: Boolean,
       default: false,
+    },
+    role: {
+      type: String,
+      enum: Role,
+      default: Role.USER,
     },
   },
   { timestamps: true }
