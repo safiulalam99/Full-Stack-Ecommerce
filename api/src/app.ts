@@ -7,10 +7,12 @@ import cors from 'cors'
 
 import productRouter from './routers/product'
 import userRouter from './routers/user'
+import loginRouter from './routers/auth'
 import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
 import passport from 'passport'
 import loginWithGoogle from './passport/google'
+import jwt, { Secret } from 'jsonwebtoken'
 
 dotenv.config({ path: '.env' })
 const app = express()
@@ -26,18 +28,10 @@ app.use(cors())
 app.use(passport.initialize())
 passport.use(loginWithGoogle())
 
-app.post(
-  '/google-login',
-  passport.authenticate('google-id-token', { session: false }),
-  (req, res) => {
-    console.log('USER FROM CONTROLLER', req.user)
-    res.json('hey there')
-  }
-)
-
 // Set up routers
 app.use('/api/v1/products', productRouter)
 app.use('/api/v1/user', userRouter)
+app.use('/api/v1/login', loginRouter)
 
 // Custom API error handler
 app.use(apiErrorHandler)

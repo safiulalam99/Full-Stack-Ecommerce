@@ -15,20 +15,24 @@ const loginWithGoogle = () => {
       clienTId: process.env.CLIENT_ID,
     },
     async (parsedToken: any, googleID: any, done: any) => {
-      const myUser = await UserService.findOne(parsedToken.payload.email)
-      console.log('Token', parsedToken.payload.email)
-      console.log('usersss', myUser)
-      if (!myUser) {
-        const user = {
-          username: parsedToken.payload.given_name,
-          email: parsedToken.payload.email,
-          role: isAdmin(parsedToken.header.typ) ? 'ADMIN' : 'USER',
-        } as UserDocument
-        const newUser = new User(user)
-        await UserService.save(newUser)
+      try {
+        const user = await UserService.findOne(parsedToken.payload.email)
+        // console.log('Token', parsedToken.payload.email)
+        // console.log('usersss', user)
+        if (!user) {
+          const user = {
+            username: parsedToken.payload.given_name,
+            email: parsedToken.payload.email,
+            role: isAdmin(parsedToken.header.typ) ? 'ADMIN' : 'USER',
+          } as UserDocument
+          const newUser = new User(user)
+          await UserService.save(newUser)
+          // done(null, user)
+        }
         done(null, user)
+      } catch (error) {
+        done(error)
       }
-      done(null, {})
     }
   )
 }

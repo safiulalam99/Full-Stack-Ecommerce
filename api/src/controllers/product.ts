@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import Product, { ProductDocument } from '../models/Product'
 import ProductService from '../services/product'
+import jwt, { Secret } from 'jsonwebtoken'
 
 import { BadRequestError } from '../helpers/apiError'
 
