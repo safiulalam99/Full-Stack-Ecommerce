@@ -22,8 +22,9 @@ export const createUser = async (
     res.json(user)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
-      next(new BadRequestError('Invalid Request', error))
+      next(new BadRequestError('Invalid Request******', error))
     } else {
+      console.log('last line is ', error)
       next(error)
     }
   }
@@ -54,6 +55,44 @@ export const findById = async (
 ) => {
   try {
     res.json(await UserService.findById(req.params.userId))
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+// DELETE /user/:userId
+export const removeUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    await UserService.deleteUser(req.params.userId)
+    res.status(204).end()
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+// PUT /user/:userId
+export const updatedUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const update = req.body
+    const userId = req.params.userId
+    const updatedUser = await UserService.update(userId, update)
+    res.json(updatedUser)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

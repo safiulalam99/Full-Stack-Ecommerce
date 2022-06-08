@@ -115,5 +115,5 @@ export const googleSignIn = (req: Request, res: Response) => {
     expiresIn: '3h',
   })
   // console.log('USER FROM CONTROLLER', user)
-  res.json({ token })
+  res.json({ user, token })
 }

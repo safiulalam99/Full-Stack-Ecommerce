@@ -1,31 +1,32 @@
 import Mongoose, { Document } from 'mongoose'
 //type definitions for products
 export type ProductDocument = Document & {
-  title: string
-  desc: string
-  img: string
-  categories: []
+  name: string
+  description: string
+  image: string
+  category: []
   size: string
   price: number
+  quantity: number
 }
 
 const productSchema = new Mongoose.Schema(
   {
-    title: {
+    name: {
       type: String,
       required: true,
       unique: true,
     },
-    desc: {
+    description: {
       type: String,
       required: true,
     },
-    img: {
+    image: {
       type: String,
       required: true,
     },
-    categories: {
-      type: Array,
+    category: {
+      type: String,
     },
     size: {
       type: String,
@@ -33,6 +34,10 @@ const productSchema = new Mongoose.Schema(
     price: {
       type: Number,
       required: true,
+    },
+    quantity: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

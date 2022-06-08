@@ -7,14 +7,14 @@ import {
   updatedProduct,
   removeProduct,
 } from '../controllers/product'
-import verifyAuthentication from '../middlewares/verifyAuthentication'
+import { verify, isAdmin } from '../middlewares/verifyAuthentication'
 const router = express.Router()
 
 // Every path we define here will get /api/v1/movies prefix
-router.get('/', verifyAuthentication, findAll)
+router.get('/', findAll)
 router.get('/:productId', findById)
-router.put('/:productId', updatedProduct)
-router.delete('/:productId', removeProduct)
-router.post('/', createProduct)
+router.put('/:productId', verify, isAdmin, updatedProduct)
+router.delete('/:productId', verify, isAdmin, removeProduct)
+router.post('/', verify, isAdmin, createProduct)
 
 export default router
