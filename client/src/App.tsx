@@ -9,11 +9,16 @@ import Home from "./Pages/Home";
 
 function App() {
   return (
+    // @ts-ignore
+
     <Router>
+      {/* @ts-ignore */}
       <Switch>
+        {/* @ts-ignore */}
         <Route exact path="/">
           <Home />
         </Route>
+        {/* @ts-ignore */}
         <Route path="/login">
           <Login />
         </Route>

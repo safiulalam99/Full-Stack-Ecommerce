@@ -20,7 +20,7 @@ const Login = () => {
       const token = res.data.token
       setToken(token)
     }
-    // console.log({token});
+    console.log({token});
     const clientId ='562271276406-2fmcdq1ue2kqia033m3pku5tjp62hio4.apps.googleusercontent.com'
   
     // const clientId =process.env.CLIENT_ID as string
