@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export interface Product {
+   _id: string;
   title: string;
   desc: string;
   img: string;
@@ -10,17 +11,20 @@ export interface Product {
   price: number;
 }
 
-type InitialState = {
+type CartInitialState = {
   products: Product[];
+  isLoading:boolean;
+  
 };
 
-const initialState: InitialState = {
+const initialState: CartInitialState = {
   products: [],
+  isLoading:false
 };
-export const handler = createAsyncThunk("cart/fetchProducts" ,async () => {
+export const fetchingProductsThunk = createAsyncThunk("cart/fetchProducts" ,async () => {
   try {
     const res = await axios.get("http://localhost:5000/api/v1/products", {});
-    console.log('res',res);
+    // console.log('res',res);
     return { ...res };
   } catch (error: any) {
     // console.log(error.response.data);
@@ -34,13 +38,20 @@ const cartSlice = createSlice({
     addProduct: (state, action) => {
       state.products.push(action.payload);
     },
+    
   },
   extraReducers(builder) {
-    builder.addCase(handler.fulfilled, (state, action) => {
-      console.log(action.payload)
+    builder.addCase(fetchingProductsThunk.pending, (state, action) => {
+      state.isLoading = true
+      // console.log(state)
+    });
+    builder.addCase(fetchingProductsThunk.fulfilled, (state, action) => {
+      // console.log(action.payload)
+        state.products = action.payload.data
+        // state.isLoading=false 
     });
   },
 });
 
-export const { addProduct,  } = cartSlice.actions;
+export const { addProduct  } = cartSlice.actions;
 export default cartSlice.reducer;

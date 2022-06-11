@@ -1,26 +1,16 @@
-import { Box, Container, Grid, Link } from "@material-ui/core";
 import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
 
-export const Footer = () => {
+const Footer = () => {
   return (
     <footer>
-      {/* @ts-ignore */}
-      <Box
-        bgcolor="text.secondary"
-        color="white"
+      <Container
+        style={{ minHeight: "6vh", alignItems:"center", justifyContent:"center" }}
       >
-        <Container maxWidth="lg">
-          <Grid item xs={12} sm={4}>
-          
-
-          </Grid>
-          {/* @ts-ignore */}
-
-          <Box textAlign="centre" pt={{xs:5,sm:10}} pb={{xs:5, sm:0}}>
-              Safiul Alam &reg; {new Date().getFullYear()}
-          </Box>
-        </Container>
-      </Box>
+        <Row>
+          <Col className="text-center py-3">Copyright &copy; Safiul Alam</Col>
+        </Row>
+      </Container>
     </footer>
   );
 };

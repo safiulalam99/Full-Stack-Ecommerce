@@ -6,6 +6,7 @@ import {
   findById,
   updatedProduct,
   removeProduct,
+  sortByPrice,
 } from '../controllers/product'
 import { verify, isAdmin } from '../middlewares/verifyAuthentication'
 const router = express.Router()
@@ -16,5 +17,6 @@ router.get('/:productId', findById)
 router.put('/:productId', verify, isAdmin, updatedProduct)
 router.delete('/:productId', verify, isAdmin, removeProduct)
 router.post('/', verify, isAdmin, createProduct)
+router.get('/', sortByPrice)
 
 export default router

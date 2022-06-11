@@ -107,3 +107,19 @@ export const removeProduct = async (
     }
   }
 }
+
+export const sortByPrice = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    await ProductService.sortProduct()
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}

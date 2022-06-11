@@ -50,6 +50,10 @@ const deleteProduct = async (
   return foundProduct
 }
 
+const sortProduct = async (): Promise<ProductDocument[]> => {
+  return Product.find().sort({ price: 1 })
+}
+
 export default {
   create,
   findById,
@@ -57,4 +61,5 @@ export default {
   update,
   deleteProduct,
   findOne,
+  sortProduct,
 }

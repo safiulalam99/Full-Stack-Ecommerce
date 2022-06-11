@@ -34,7 +34,6 @@ const isAdmin: RequestHandler = (req, res, next) => {
   console.log('isAdmin request is *******', adminFromReq)
 
   if (req.user && adminFromReq === 'USER') {
-    console.log('We did it')
     next()
   } else {
     throw new ForbiddenError()
