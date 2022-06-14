@@ -18,23 +18,24 @@ import Orders from "./PagesAdmin/Orders";
 import ProductsAdmin from "./PagesAdmin/Products";
 import UserProfile from "./PagesUser/UserProfile";
 import Cart from "./PagesUser/Cart";
+import SingleProduct from "./PagesUser/SingleProduct";
 
 function App() {
   const user = false;
   return (
     <Router>
-      <NavBar/>
+      <NavBar />
       <Routes>
-
         <Route path="/admin/editProducts" element={<AddProducts />} />
         <Route path="/admin/users" element={<UserTable />} />
         <Route path="/admin/products" element={<ProductsAdmin />} />
         <Route path="/admin/orders" element={<Orders />} />
-        <Route path="/admin/userProfile" element={<UserProfile />} />
 
+        <Route path="/userProfile" element={<UserProfile />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/product/:id" element={<SingleProduct />} />
       </Routes>
     </Router>
   );

@@ -56,7 +56,7 @@ export const updatedProduct = async (
   }
 }
 
-// GET /products
+// GET ALL /products
 export const findAll = async (
   req: Request,
   res: Response,
@@ -81,6 +81,26 @@ export const findById = async (
 ) => {
   try {
     res.json(await ProductService.findById(req.params.productId))
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+// GET /products/:category
+export const findByCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log(req.query)
+  // const new =req.params.category;
+  const cat = req.query.category
+  try {
+    // @ts-ignore
+    res.json(await Product.findByCategory(cat))
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

@@ -21,18 +21,16 @@ const initialState: CartInitialState = {
   products: [],
   isLoading:false
 };
-export const fetchingProductsThunk = createAsyncThunk("cart/fetchProducts" ,async () => {
+export const fetchingProductsThunk = createAsyncThunk("product/fetchProducts" ,async () => {
   try {
     const res = await axios.get("http://localhost:5000/api/v1/products", {});
-    // console.log('res',res);
     return { ...res };
   } catch (error: any) {
-    // console.log(error.response.data);
     return error.message;
   }
 });
-const cartSlice = createSlice({
-  name: "cart",
+const homepageSlice = createSlice({
+  name: "home",
   initialState,
   reducers: {
     addProduct: (state, action) => {
@@ -53,5 +51,5 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addProduct  } = cartSlice.actions;
-export default cartSlice.reducer;
+export const { addProduct  } = homepageSlice.actions;
+export default homepageSlice.reducer;

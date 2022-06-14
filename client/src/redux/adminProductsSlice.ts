@@ -12,10 +12,14 @@ export interface Product {
 
 type InitialState = {
   products: Product[];
+  isFetching:boolean,
+  error:boolean
 };
 
 const initialState: InitialState = {
   products: [],
+  isFetching:false,
+  error:false
 };
 export const handler = createAsyncThunk("cart/fetchProducts" ,async () => {
   try {

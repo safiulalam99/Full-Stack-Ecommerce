@@ -9,6 +9,8 @@ import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
+import Avatar from '@mui/material/Avatar';
+
 import { Box, Button, Container } from "@material-ui/core";
 
 import { Link } from "react-router-dom";
@@ -55,7 +57,8 @@ export default function ProductsAdmin() {
   return (
     <>
       <Container style={{maxWidth: "lg", paddingTop:'34'}} >
-          <Box>
+          <Box sx={{ m: 3, mt:4,  }} style={{float:'right'}}>
+            
           <Link to ={`/admin/editProducts`} style={{ textDecoration: 'none' }}>
       <Button variant="contained">New Product</Button>
       </Link>
@@ -64,10 +67,10 @@ export default function ProductsAdmin() {
           <Table sx={{ minWidth: "sm", minHeight:"sm" }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-                <StyledTableCell align="right">Calories</StyledTableCell>
-                <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-                <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
+                <StyledTableCell>ID</StyledTableCell>
+                <StyledTableCell align="right">Product</StyledTableCell>
+                <StyledTableCell align="right">Stock</StyledTableCell>
+                <StyledTableCell align="right">Price</StyledTableCell>
                 <StyledTableCell align="right">
                   Protein&nbsp;(g)
                 </StyledTableCell>
@@ -81,7 +84,7 @@ export default function ProductsAdmin() {
                     {row.name}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {row.calories}
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                   </StyledTableCell>
                   <StyledTableCell align="right">{row.fat}</StyledTableCell>
                   <StyledTableCell align="right">{row.carbs}</StyledTableCell>

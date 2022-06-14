@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
-import { Button, Container } from "@material-ui/core";
+import { Box, Button, Container } from "@material-ui/core";
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 
@@ -56,7 +56,9 @@ export default function UserTable() {
   return (
     <>
       <Container style={{maxWidth: "lg", paddingTop:'34'}} >
+      <Box sx={{ m: 3, mt:4,  }} style={{float:'right'}}>
       <Button variant="contained">Create User</Button>
+      </Box>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: "sm", minHeight:"sm" }} aria-label="customized table">
             <TableHead>

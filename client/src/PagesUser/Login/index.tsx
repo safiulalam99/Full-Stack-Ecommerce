@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { fetchingProductsThunk } from "../../redux/cartRedux";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { login } from "../../redux/apiCalls";
+import { loginStart, loginSuccess } from "../../redux/userSlice";
 
 const Login = () => {
   const [token, setToken] = useState("");
   const dispatch = useAppDispatch();
-  const  cart  = useAppSelector(state => state.cart);
-  console.log(cart)
 
   const handleSucess = async (googleResponse: any) => {
     const tokenId = googleResponse.credential;
     console.log(googleResponse);
+    dispatch(loginStart());
     const res = await axios.post(
       "http://localhost:5000/api/v1/login/google",
       {},
@@ -22,40 +22,24 @@ const Login = () => {
         },
       }
     );
-    const token = res.data.token;
-    setToken(token);
-    console.log(res.data);
+    dispatch(loginSuccess(res));
   };
-  // console.log({token});
+
+  const handleSuccess = (e: any) => {
+    const token = e.credential;
+    console.log(token);
+    login(dispatch, token);
+  };
+
   const clientId =
     "562271276406-2fmcdq1ue2kqia033m3pku5tjp62hio4.apps.googleusercontent.com";
 
-  // const clientId =process.env.CLIENT_ID as string
-  // const handler = async ()=>{
-  //   try{
-  //   const res = await axios.get('http://localhost:5000/api/v1/products',{
-
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //   })
-  //   console.log(res)
-  //   } catch(error:any) {
-  //     // console.log(error.response.data);
-  //   }
-  // }
-
-  const onClickHandler = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    dispatch(fetchingProductsThunk());
-  }
   return (
     <div className="App">
       <header className="App-header">
         <GoogleOAuthProvider clientId={clientId}>
-          <GoogleLogin onSuccess={handleSucess} />
+          <GoogleLogin onSuccess={handleSuccess} />
         </GoogleOAuthProvider>
-        <button onClick={onClickHandler}>Test Fetch </button>
       </header>
     </div>
   );

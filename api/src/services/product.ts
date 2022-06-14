@@ -14,10 +14,24 @@ const findById = async (productId: string): Promise<ProductDocument> => {
 
   return foundProduct
 }
+const findByCategory = async (qcategory: any) => {
+  const foundProduct = await Product.find({
+    category: { $in: [qcategory] },
+  })
+
+  if (!foundProduct) {
+    throw new NotFoundError(`Product ${qcategory} not found`)
+  }
+
+  return foundProduct
+}
 
 const findAll = async (): Promise<ProductDocument[]> => {
   return Product.find().sort({ name: 1, price: -1 })
 }
+// const findAll = async (): Promise<ProductDocument[]> => {
+//   return Product.find().sort({ name: 1, price: -1 })
+// }
 
 const findOne = async (_id: string): Promise<ProductDocument | null> => {
   return Product.findById({ _id })
@@ -62,4 +76,5 @@ export default {
   deleteProduct,
   findOne,
   sortProduct,
+  findByCategory,
 }
