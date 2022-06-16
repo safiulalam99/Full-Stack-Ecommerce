@@ -40,7 +40,7 @@ useEffect(() => {
             {item.name}
           </Typography>
           <Typography variant="h5" style={{}}>
-            {item.price}
+          € {item.price}
           </Typography>
 
         </CardContent>

@@ -4,6 +4,7 @@ import ProductService from '../services/product'
 import jwt, { Secret } from 'jsonwebtoken'
 
 import { BadRequestError } from '../helpers/apiError'
+import { AnyRecord } from 'dns'
 
 // POST /product
 export const createProduct = async (
@@ -135,6 +136,24 @@ export const sortByPrice = async (
 ) => {
   try {
     await ProductService.sortProduct()
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+export const pagination = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { page = 1, limit = 3 }: any = req.query
+    const products = await Product.find()
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
