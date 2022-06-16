@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,12 +9,18 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from '@mui/icons-material/Edit';
-import Avatar from '@mui/material/Avatar';
+import EditIcon from "@mui/icons-material/Edit";
+import Avatar from "@mui/material/Avatar";
+import moment from "moment";
+
+import { getAdminProducts, deleteAdminProduct } from "../../redux/apiCalls";
+import { useDispatch, useSelector } from "react-redux";
+import { ProductType } from "../../redux/cartSlice";
 
 import { Box, Button, Container } from "@material-ui/core";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -54,46 +61,80 @@ const rows = [
 ];
 
 export default function ProductsAdmin() {
+  const dispatch = useDispatch();
+
+  const handleDelete = (id: any) => {
+    deleteAdminProduct(id, dispatch);
+  };
+
+  // @ts-ignore
+  const products = useAppSelector((state) => state.adminProducts.products);
+  useEffect(() => {
+    getAdminProducts(dispatch);
+  }, [dispatch]);
+
+  // console.log(products);
   return (
     <>
-      <Container style={{maxWidth: "lg", paddingTop:'34'}} >
-          <Box sx={{ m: 3, mt:4,  }} style={{float:'right'}}>
-            
-          <Link to ={`/admin/editProducts`} style={{ textDecoration: 'none' }}>
-      <Button variant="contained">New Product</Button>
-      </Link>
-      </Box>
+      <Container style={{ maxWidth: "lg", paddingTop: "34" }}>
+        <Box sx={{ m: 3, mt: 4 }} style={{ float: "right" }}>
+          <Link to={`/admin/AddProducts`} style={{ textDecoration: "none" }}>
+            <Button variant="contained">New Product</Button>
+          </Link>
+        </Box>
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: "sm", minHeight:"sm" }} aria-label="customized table">
+          <Table
+            sx={{ minWidth: "sm", minHeight: "sm" }}
+            aria-label="customized table"
+          >
             <TableHead>
               <TableRow>
                 <StyledTableCell>ID</StyledTableCell>
                 <StyledTableCell align="right">Product</StyledTableCell>
                 <StyledTableCell align="right">Stock</StyledTableCell>
                 <StyledTableCell align="right">Price</StyledTableCell>
-                <StyledTableCell align="right">
-                  Protein&nbsp;(g)
-                </StyledTableCell>
+                <StyledTableCell align="right">Last Modified</StyledTableCell>
                 <StyledTableCell align="right">Actions</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow key={row.name}>
-                  <StyledTableCell component="th" scope="row">
-                    {row.name}
+              {products.map((products: ProductType) => (
+                <StyledTableRow key={products.name}>
+                  <StyledTableCell component="th" scope="products">
+                    {products.name}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                    <Avatar
+                      style={{ objectFit: "fill" }}
+                      alt={products.name}
+                      src={products.image}
+                    />
                   </StyledTableCell>
-                  <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                  <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                  <StyledTableCell align="right">{row.protein}</StyledTableCell>
                   <StyledTableCell align="right">
-                  <IconButton aria-label="edit" size="small">
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton  style={{color:"red"}} aria-label="delete" size="small">
+                    {products.quantity}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {products.price}
+                  </StyledTableCell>
+
+                  <StyledTableCell align="right">
+                    {moment(products.updatedAt).fromNow()}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    <Link
+                      to={`/admin/editProducts/${products._id}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <IconButton aria-label="edit" size="small">
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Link>
+                    <IconButton
+                      style={{ color: "red" }}
+                      aria-label="delete"
+                      size="small"
+                      onClick={() => handleDelete(products._id)}
+                    >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
                   </StyledTableCell>

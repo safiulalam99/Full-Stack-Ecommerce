@@ -8,10 +8,26 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Container } from "@material-ui/core";
-import CheckIcon from '@mui/icons-material/Check';
-import ClearIcon from '@mui/icons-material/Clear';
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import moment from "moment";
+
+import { getAdminUsers } from "../../redux/apiCalls";
+import { useEffect } from "react";
+
+export interface UserType {
+  isAdmin: boolean;
+ role: string;
+ _id: string;
+ username: string;
+ email: string;
+ createdAt: string;
+ updatedAt:string;
+}
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,63 +49,62 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("aasdhjdgasukhfgasfvjhasgfaaskhjfg", 159, 6.0, 24, 4.0),
-  createData("aasdhjdgasukhfgasfvjhasgfaaskhjfg", 237, 9.0, 37, 4.3),
-  createData("aasdhjdgasukhfgasfvjhasgfaaskhjfg", 262, 16.0, 24, 6.0),
-  createData("aasdhjdgasukhfgasfvjhasgfaaskhjfg", 305, 3.7, 67, 4.3),
-  createData("aasdhjdgasukhfgasfvjhasgfaaskhjfg", 356, 16.0, 49, 3.9),
-];
 
 export default function UserTable() {
- const admin= true;
+
+  const dispatch = useAppDispatch();
+  const fetchedUser = useAppSelector((state:any) => state.adminUser.user);
+  
+  useEffect(() => {
+    getAdminUsers(dispatch);
+  }, []);
   return (
     <>
-      <Container style={{maxWidth: "lg", paddingTop:'34'}} >
-      <Box sx={{ m: 3, mt:4,  }} style={{float:'right'}}>
-      <Button variant="contained">Create User</Button>
-      </Box>
+      <Container style={{ maxWidth: "lg", paddingTop: "34" }}>
+        <Box sx={{ m: 3, mt: 4 }} style={{ float: "right" }}>
+        </Box>
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: "sm", minHeight:"sm" }} aria-label="customized table">
+          <Table
+            sx={{ minWidth: "sm", minHeight: "sm" }}
+            aria-label="customized table"
+          >
             <TableHead>
               <TableRow>
                 <StyledTableCell>ID</StyledTableCell>
                 <StyledTableCell align="right">Name</StyledTableCell>
                 <StyledTableCell align="right">Email</StyledTableCell>
-                <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
+                <StyledTableCell align="right">Created</StyledTableCell>
                 <StyledTableCell align="right"> Admin</StyledTableCell>
                 <StyledTableCell align="right">Actions</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow key={row.name}>
+              {fetchedUser?.map((user:UserType) => (
+                <StyledTableRow key={user._id}>
                   <StyledTableCell component="th" scope="row">
-                    {row.name}
+                    {user._id}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {row.calories}
+                    {user.username}
                   </StyledTableCell>
-                  <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                  <StyledTableCell align="right">{row.carbs}</StyledTableCell>
+                  <StyledTableCell align="right">{user.email}</StyledTableCell>
+                  <StyledTableCell align="right">{moment(user.createdAt).fromNow()}</StyledTableCell>
                   <StyledTableCell align="right">
-                    {admin ? <CheckIcon style={{color:'green'}} /> : <ClearIcon style={{color:'red'}} />}
-                    </StyledTableCell>
+                    {user.isAdmin ? (
+                      <CheckIcon style={{ color: "green" }} />
+                    ) : (
+                      <ClearIcon style={{ color: "red" }} />
+                    )}
+                  </StyledTableCell>
                   <StyledTableCell align="right">
-                  <IconButton aria-label="edit" size="small">
+                    <IconButton aria-label="edit" size="small">
                       <EditIcon fontSize="small" />
                     </IconButton>
-                    <IconButton  style={{color:"red"}} aria-label="delete" size="small">
+                    <IconButton
+                      style={{ color: "red" }}
+                      aria-label="delete"
+                      size="small"
+                    >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
                   </StyledTableCell>

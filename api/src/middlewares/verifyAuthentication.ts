@@ -33,7 +33,7 @@ const isAdmin: RequestHandler = (req, res, next) => {
   const adminFromReq = req.user.role
   console.log('isAdmin request is *******', adminFromReq)
 
-  if (req.user && adminFromReq === 'USER') {
+  if (req.user && adminFromReq === 'ADMIN') {
     next()
   } else {
     throw new ForbiddenError()

@@ -12,6 +12,8 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import jwt_decode from "jwt-decode";
+// import { decodeFunction } from "../../redux/apiCalls";
 
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
@@ -20,16 +22,51 @@ import Badge from "@mui/material/Badge";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { Grid } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
+import { RULES } from "../../roles";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Can from "../../helper/authCheck";
+import Login from "../../PagesUser/Login/";
+import { decodeFunction } from "../../redux/apiCalls";
 
-const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = () => {
   // @ts-ignore
-const quantity = useSelector(state => state.cart.quantity );
+  const quantity = useSelector((state) => state.cart.quantity);
+
+  const [isLoggedIn, setIsLoggedIn] = React.useState("");
+  const [cartQuantity, setCartQuantity] = React.useState("");
+  const [searchP, setSearchP] = React.useState("");
+  console.log(searchP);
+
+  React.useEffect(() => {
+    const getToken = localStorage.getItem("token");
+    // @ts-ignore
+    const cartQ = JSON.parse(localStorage.getItem("cart"));
+    if (getToken) {
+      setIsLoggedIn(getToken);
+    }
+    if (cartQ) {
+      setCartQuantity(cartQ.quantity);
+    }
+    
+  }, []);
+  console.log(cartQuantity);
+  // @ts-ignore
+  const decoded = decodeFunction();
+  // @ts-ignore
+
+  // const finalcode = decoded?.role.toLowerCase();
+  const finalcode = decoded?.role.toLowerCase();
+  console.log(finalcode);
+
+  const handleLogout = async () => {
+    await localStorage.removeItem("token");
+    setIsLoggedIn("");
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
+  };
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -152,59 +189,75 @@ const quantity = useSelector(state => state.cart.quantity );
                 display: { xs: "block", md: "none" },
               }}
             >
-              {/* {pages.map((page) => ( */}
-              <MenuItem
-                // key={page}
-                onClick={handleCloseNavMenu}
-              >
-                <Typography textAlign="center">Hector</Typography>
-              </MenuItem>
+              <Can
+                role={finalcode}
+                perform="admin:get"
+                yes={() => (
+                  <MenuItem>
+                    <Button
+                      sx={{
+                        display: { xs: "block", md: "n  one" },
+                      }}
+                      id="basic-button"
+                      aria-controls={open ? "basic-menu" : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={open ? "true" : undefined}
+                      onClick={handleClick}
+                    >
+                      admin1 {<KeyboardArrowDownIcon />}
+                    </Button>
+
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        "aria-labelledby": "basic-button",
+                      }}
+                    >
+                      <Link
+                        to={`/admin/users`}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <MenuItem onClick={handleClose}>Users</MenuItem>
+                      </Link>
+                      <Link
+                        to={`/admin/products`}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <MenuItem onClick={handleClose}>Products</MenuItem>
+                      </Link>
+                      <Link
+                        to={`/admin/orders`}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <MenuItem onClick={handleClose}>Orders</MenuItem>
+                      </Link>
+                    </Menu>
+                  </MenuItem>
+                )}
+              />
               <MenuItem>
-                <Button
-                  sx={{
-                    display: { xs: "block", md: "none" },
-                  }}
-                  id="basic-button"
-                  aria-controls={open ? "basic-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={handleClick}
-                >
-                  admin1 {<KeyboardArrowDownIcon />}
-                </Button>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
-                >
-                  <Link to={`/admin/users`} style={{ textDecoration: "none" }}>
-                    <MenuItem onClick={handleClose}>Users</MenuItem>
-                  </Link>
-                  <Link
-                    to={`/admin/products`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <MenuItem onClick={handleClose}>Products</MenuItem>
-                  </Link>
-                  <Link to={`/admin/orders`} style={{ textDecoration: "none" }}>
-                    <MenuItem onClick={handleClose}>Orders</MenuItem>
-                  </Link>
-                </Menu>
-              </MenuItem>
-              <MenuItem>
-                <Link to={`/login`} style={{ textDecoration: "none" }}>
+                {isLoggedIn ? (
                   <Button
                     // key={page}
-                    onClick={handleCloseNavMenu}
+                    onClick={handleLogout}
                     sx={{ color: "black", display: "inline" }}
                   >
-                    login1
+                    Logout
                   </Button>
-                </Link>
+                ) : (
+                  <Link to={`/login`} style={{ textDecoration: "none" }}>
+                    <Button
+                      // key={page}
+                      onClick={handleCloseNavMenu}
+                      sx={{ color: "black", display: "inline" }}
+                    >
+                      Login
+                    </Button>
+                  </Link>
+                )}
               </MenuItem>
               {/* ))} */}
             </Menu>
@@ -216,6 +269,7 @@ const quantity = useSelector(state => state.cart.quantity );
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
+              onChange={(e) => setSearchP(e.target.value)}
             />
           </Search>
           <Typography
@@ -236,39 +290,35 @@ const quantity = useSelector(state => state.cart.quantity );
           >
             KIRA
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {/* {pages.map((page) => ( */}
-            <Button
-              // key={page}
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              hector
-            </Button>
-            {/* ))} */}
-          </Box>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "inline" } }}>
             {/* {pages.map((page) => ( */}
 
             {/* ))} */}
           </Box>
-          <Button
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-            style={{
-              backgroundColor: "white",
-              position: "relative",
-              right: "65px",
-            }}
-            sx={{
-              display: { xs: "none", md: "block" },
-            }}
-          >
-            admin2 {<KeyboardArrowDownIcon />}
-          </Button>
+          <Can
+            role={finalcode}
+            perform="admin:get"
+            yes={() => (
+              <Button
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+                style={{
+                  backgroundColor: "white",
+                  position: "relative",
+                  right: "65px",
+                }}
+                sx={{
+                  display: { xs: "none", md: "block" },
+                }}
+              >
+                admin2 {<KeyboardArrowDownIcon />}
+              </Button>
+            )}
+          />
           <Menu
             id="basic-menu"
             anchorEl={anchorEl}
@@ -288,25 +338,34 @@ const quantity = useSelector(state => state.cart.quantity );
               <MenuItem onClick={handleClose}>Orders</MenuItem>
             </Link>
           </Menu>
-          <Link to={`/login`} style={{ textDecoration: "none" }}>
+          {isLoggedIn ? (
+            <Button
+              style={{ position: "relative", right: "60px" }}
+              // key={page}
+              onClick={handleLogout}
+              sx={{ color: "white", display: { xs: "none", md: "block" } }}
+            >
+              Logout
+            </Button>
+          ) : (
             <Button
               style={{ position: "relative", right: "60px" }}
               // key={page}
               onClick={handleCloseNavMenu}
               sx={{ color: "white", display: { xs: "none", md: "block" } }}
             >
-              login
+              <Login />
             </Button>
-          </Link>
+          )}
 
           <Box
             style={{ position: "relative", right: "30px" }}
             sx={{ display: { xs: "none", md: "block" } }}
           >
             <Link to={`/cart`} style={{ textDecoration: "none" }}>
-            <Badge badgeContent={quantity} style={{color:'red'}}>
-              <ShoppingBagIcon sx={{ fontSize: 37 }} />
-            </Badge>
+              <Badge badgeContent={cartQuantity?  cartQuantity : quantity} style={{ color: "red" }}>
+                <ShoppingBagIcon sx={{ fontSize: 37 }} />
+              </Badge>
             </Link>
           </Box>
 

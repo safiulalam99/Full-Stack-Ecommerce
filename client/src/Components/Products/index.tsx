@@ -1,4 +1,4 @@
-import { Container, Grid } from "@material-ui/core";
+import { Container, Grid, TextField } from "@material-ui/core";
 import Product from "../Product";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -19,7 +19,7 @@ const Products = () => {
   const fetchedProducts = useAppSelector((state) => state.product.products);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState({});
-
+  const [searchIn, setSearchIn] = useState("");
 
   const location = useLocation();
 
@@ -32,10 +32,14 @@ const Products = () => {
     // console.log();
     dispatch(fetchingProductsThunk());
   }, []);
+
+
+  
   return (
     <>
       <Box style={{ display: "flex", left: "80px", top: "2px" }}>
-        <InputLabel id="filter">Filter</InputLabel>
+       
+        {/* <InputLabel id="filter">Filter</InputLabel>
         <Select name="category" onChange={handleFilters}>
           <MenuItem value={"men's clothing"}>Mens</MenuItem>
           <MenuItem value={"women's clothing"}>Women</MenuItem>
@@ -48,18 +52,26 @@ const Products = () => {
           <MenuItem value={"desc"}>Descending</MenuItem>
           <MenuItem value={"price"}>Price</MenuItem>
           <MenuItem value={"latest"}>Latest</MenuItem>
-        </Select>
+        </Select> */}
       </Box>
       <Container maxWidth="md" style={{ display: "flex", paddingTop: "25px" }}>
-          <Grid container spacing={3}>
-            {fetchedProducts.map((item:any) => (
-              <Grid item sm={4} md={3} xs={12}>
-                <Link to={`/product/${item._id}`} style={{ textDecoration: "none" }}>
-                <Product item={item} key={item._id} filters={filters} sort={sort} />
-            </Link>
-              </Grid>
-            ))}
-          </Grid>
+        <Grid container spacing={3}>
+          {fetchedProducts.map((item: any) => (
+            <Grid item sm={4} md={3} xs={12}>
+              <Link
+                to={`/product/${item._id}`}
+                style={{ textDecoration: "none" }}
+              >
+                <Product
+                  item={item}
+                  key={item._id}
+                  filters={filters}
+                  sort={sort}
+                />
+              </Link>
+            </Grid>
+          ))}
+        </Grid>
       </Container>
     </>
   );

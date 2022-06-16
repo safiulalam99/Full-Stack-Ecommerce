@@ -1,33 +1,22 @@
 import { bindActionCreators, createSlice } from "@reduxjs/toolkit";
 import { iteratorSymbol } from "immer/dist/internal";
 
-type UserInitialState = {
-  products: [];
-  isFetching: boolean;
-  error: boolean;
-};
 
-const initialState: UserInitialState = {
-  products: [],
-  isFetching: false,
-  error: false,
-};
-
-const adminProductSlice = createSlice({
+const adminUserSlice = createSlice({
   name: "user",
-  initialState: initialState,
+  initialState: { currentUser: [], isFetching: false, error: false },
   reducers: {
     //GET ALL
-    getAdminProductStart: (state) => {
+    getAdminUserStart: (state) => {
       state.isFetching = true;
       state.error = false;
     },
-    getAdminProductSuccess: (state: any, action) => {
+    getAdminUserSuccess: (state: any, action) => {
       state.isFetching = false;
-      state.products = action.payload;
+      state.user = action.payload;
       state.error = false;
     },
-    getAdminProductFailure: (state) => {
+    getAdminUserFailure: (state) => {
       state.isFetching = false;
       state.error = true;
     },
@@ -82,17 +71,9 @@ const adminProductSlice = createSlice({
   },
 });
 export const {
-  getAdminProductStart,
-  getAdminProductSuccess,
-  getAdminProductFailure,
-  deleteAdminProductStart,
-  deleteAdminProductSuccess,
-  deleteAdminProductFailure,
-  updateAdminProductStart,
-  updateAdminProductSuccess,
-  updateAdminProductFailure,
-  addAdminProductStart,
-  addAdminProductSuccess,
-  addAdminProductFailure,
-} = adminProductSlice.actions;
-export default adminProductSlice.reducer;
+  getAdminUserStart,
+  getAdminUserSuccess,
+  getAdminUserFailure,
+  
+} = adminUserSlice.actions;
+export default adminUserSlice.reducer;

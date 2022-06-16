@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export interface Product {
+export interface ProductType {
     _id: string;
-   title: string;
-   desc: string;
-   img: string;
-   categories: string[];
-   size: string;
+   name: string;
+   description: string;
+   image: string;
+   category: string[];
    price: number;
+   quantity: number;
+   updatedAt:string;
  }
  
  type CartInitialState = {
@@ -32,7 +33,7 @@ const cartSlice = createSlice({
         addProduct:(state:any,action:any)=>{
             state.quantity += 1;
             state.products.push(action.payload);
-            state.total += action.payload.price;
+            state.total += action.payload.price * action.payload.quantity;
         }
     }
 })

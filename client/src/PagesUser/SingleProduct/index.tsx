@@ -6,19 +6,19 @@ import { useEffect, useState } from "react";
 
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { fetchingProductsThunk } from "../../redux/singleProductSlice";
-import { addProduct } from "../../redux/cartSlice";
+import { addProduct,ProductType} from "../../redux/cartSlice";
 
-
+// @ts-ignore
+const getCart = JSON.parse(localStorage.getItem("cart"))  ;
 
 const Product = () => {
   const location = useLocation();
   const id = location.pathname.split("/")[2];
   const [quantity, setQuantity] = useState(1);
-  const [product, setProduct] = useState(1);
+  const [product, setProduct] = useState(getCart);
   const dispatch = useAppDispatch();
   const fetchedProducts =product
-  //  = useAppSelector((state) => state.product.products);
-  // console.log("dispatch", fetchedProducts);
+  console.log("dispatch", location);
 const getProduct = async () => {
   try{
 const res = await publicRequest.get(`/products/${id}`);
@@ -26,8 +26,9 @@ setProduct(res.data);
   }catch(err){console.log(err)}
 }
 
+  
+
   useEffect(() => {
-    // dispatch(fetchingProductsThunk(id));
     getProduct()
   }, [location]);
   
@@ -38,18 +39,18 @@ setProduct(res.data);
       setQuantity(quantity + 1);
     }
   };
+  console.log(quantity);
 // console.log(fetchedProducts);
 const handleCart = () => {
   //update cart
             {/* @ts-ignore */}
-dispatch(addProduct({ quantity, ...product}))
-  
+dispatch(addProduct({  ...product,quantity}))
 }
   return (
     <Container>
       <Wrapper>
         <ImgContainer>
-          {/* @ts-ignore */}
+       {/* @ts-ignore */}
           <Image src={fetchedProducts.image} />
         </ImgContainer>
         <InfoContainer>

@@ -14,14 +14,14 @@ const initialState: UserInitialState = {
 
 const userSlice = createSlice({
   name: "user",
-  initialState: { currentUser: null, isFetching: false, error: false },
+  initialState: { currentUser: [], isFetching: false, error: false },
   reducers: {
     loginStart: (state) => {
       state.isFetching = true;
     },
     loginSuccess: (state, action) => {
       state.isFetching = false;
-      state.currentUser = action.payload;
+      state.currentUser = action.payload.data;
     },
     loginFailure: (state) => {
       state.isFetching = false;

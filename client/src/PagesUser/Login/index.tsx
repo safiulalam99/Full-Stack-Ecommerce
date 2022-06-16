@@ -1,47 +1,38 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Alert from "@mui/material/Alert";
+
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { login } from "../../redux/apiCalls";
 import { loginStart, loginSuccess } from "../../redux/userSlice";
+import { Button } from "@material-ui/core";
 
 const Login = () => {
-  const [token, setToken] = useState("");
   const dispatch = useAppDispatch();
+  const { isFetching, error } = useAppSelector((state) => state.user);
 
-  const handleSucess = async (googleResponse: any) => {
-    const tokenId = googleResponse.credential;
-    console.log(googleResponse);
-    dispatch(loginStart());
-    const res = await axios.post(
-      "http://localhost:5000/api/v1/login/google",
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${tokenId}`,
-        },
-      }
-    );
-    dispatch(loginSuccess(res));
-  };
-
-  const handleSuccess = (e: any) => {
+  const handleSuccess = async(e: any) => {
     const token = e.credential;
     console.log(token);
-    login(dispatch, token);
+    await login(dispatch, token);
+    // eslint-disable-next-line no-restricted-globals
+    await location.reload();
   };
 
-  const clientId =
-    "562271276406-2fmcdq1ue2kqia033m3pku5tjp62hio4.apps.googleusercontent.com";
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID as string;
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <GoogleOAuthProvider clientId={clientId}>
-          <GoogleLogin onSuccess={handleSuccess} />
-        </GoogleOAuthProvider>
-      </header>
-    </div>
+    <GoogleOAuthProvider clientId={clientId}>
+      <Button disabled={isFetching}>
+        <GoogleLogin onSuccess={handleSuccess} />
+      </Button>
+      {error && (
+        <Alert variant="outlined" severity="error">
+          This is an error alert — check it out!
+        </Alert>
+      )}
+    </GoogleOAuthProvider>
   );
 };
 
