@@ -1,31 +1,49 @@
-# Fullstack-Typescript-Project
 
-First choose the project topic. The topics and assignment can be found in Fullstack assignment presentation on the shared drive.
 
-## Prerequisites
+<h1 align="center">Kira Ecomemrce Store</h1>
 
-1. Install mongodb or use MongoDB Atlas (cloud version)
-2. Install nodejs (if you don't have it already)
+<p align="center">
+    This project is a mock store that utilizes user authentication and a payment system.
+    
+</p>
 
-## Setting Up for `API folder`
+---
+## Summary
 
-1. Create a `.env` file in the root directory and copy the content from `.env.example`
+A Full-stack *React Typescript* ecommerce site where users can browse and shop products and make order with Stripe payment option integrated. The app state is managed using Redux Toolkit The app also has an admin panel which grants special privileges to admin roles.
+## Purpose 
 
-2. Make sure mongodb is running (if you are using local MongoDB)
-3. Install dependencies: `yarn`
-4. Use this command for development mode: `yarn run start:dev`
-5. If you need to customize your env, take a look at `secrets.ts` file
+The purpose of this project is to learn the usage of Typescript with react and Nodejs to learn best practices in development. The project also adheres to best security practices when it comes to making a backend API
 
-## Requirements
 
-Below are the steps that you need to finish in order to finish this module
+## Features
 
-1. Explore the code base of the api folder, start with `server.ts` and `app.ts`
-2. Client folder is for the react frontend. Start with `api` first before moving on to `client`
-3. Create all the mongoose schema for your ERD
-4. Create CRUD endpoints for all the schema
-5. Separate the routers and controller, controller goes into the controller folders. Controllers only handles request and response, and will call service to process business logics.
-6. Create more controller for your app if needed. Eg: borrow books, add product to order
-7. For business logic like saving data to database, filtering, searching or updating, these are services and goes into services folder
-8. Add authentication middleware using passport, google and jwt strategy
-9. Add tests for your controllers and services. Remember to create the jwt token for your tests, because if your controller is protected, then the test should send the token also
+- Users can search, sort, explore products.
+- Add products to cart and persist them through out the navigation.
+- Checkout - <i>in progress</i>
+- Authentication with Google and authorization with JWT token
+- User Profile - <i>in progress</i>
+- Admin can add, delete, edit product and users information.
+- Admin can upload pictures which uses firebase storage
+
+## Tech
+### Frontend
+- Typescript
+- Reactjs
+- MaterialUI 
+- Styled-components
+- Redux - state management
+- JWT - token
+- Firebase storage - image upload
+- Jest - testing
+- React-Router
+
+
+### API
+- Typescript
+- Nodejs
+- Mongodb
+- Expressjs
+- Passport Oauth
+- Mongoose
+- Jest
